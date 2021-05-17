@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% load tags_jinja %}
+{% block title %}Управление - Сотрудники{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% if arguments.error %}
+            <div class="alert alert-danger my_border">
+                {{ arguments.error }}
+            </div>
+        {% endif %}
+
+        {% if arguments.add_user_data %}
+            <div class="alert alert-success my_border">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="alert-heading">Сотрудник успешно добавлен!</h4>
+                <hr>
+                <p>Логин: <b>{{ arguments.add_user_data.username }}</b><br>
+                    Пароль: <b>{{ arguments.add_user_data.password }}</b></p>
+
+            </div>
+        {% endif %}
+
+        <button type="button" class="btn btn-dark btn-block my_border" role="button" data-toggle="modal"
+                data-target="#AddModal">
+            Добавить сотрудника
+        </button>
+
+        {% if arguments.all_user|cheak_count_list > 0 %}
+            {% for data in arguments.all_user %}
+                <h3 class="center">
+                    {{ data.group_name }}
+                </h3>
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">№</th>
+                            <th scope="col">Логин</th>
+                            <th scope="col">Фамилия</th>
+                            <th scope="col">Имя</th>
+                            <th scope="col">Отчество</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% if data.user_list|cheak_count_list > 0 %}
+                            {% for usr in data.user_list %}
+                                <tr role="button"
+                                    onclick="window.location.href = '/user/userlist/profile/{{ usr.id }}/'">
+                                    <th scope="row" data-toggle="tooltip" data-placement="bottom"
+                                        title="Нажмите для редактирования">{{ usr.id }}</th>
+                                    <td data-toggle="tooltip" data-placement="bottom"
+                                        title="Нажмите для редактирования">{{ usr.username }}</td>
+                                    <td data-toggle="tooltip" data-placement="bottom"
+                                        title="Нажмите для редактирования">{{ usr.last_name }}</td>
+                                    <td data-toggle="tooltip" data-placement="bottom"
+                                        title="Нажмите для редактирования">{{ usr.first_name }}</td>
+                                    <td data-toggle="tooltip" data-placement="bottom"
+                                        title="Нажмите для редактирования">{{ usr.userprofile.patronymic }}</td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr role="button">
+                                <th scope="row" data-toggle="tooltip" data-placement="bottom"
+                                    title="Нажмите для редактирования" colspan="5" class="center">
+                                    {{ data.group_name }} еще не добавлен!
+                                </th>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-danger my_border">
+                <p class="text">Сотрудники не найдены!</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Add Modal -->
+    <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="AddModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AddModalLabel">Добавление нового сотрудника</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="group_name">Должность</label>
+                            <select class="form-control" id="group_name" name="group_name">
+                                {% if arguments.group_list %}
+                                    {% for group in arguments.group_list %}
+                                        <option value="{{ group }}">{{ group }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        {% csrf_token %}
+                        {% for field in arguments.form %}
+                            <div class="form-group">
+                                {% if field.errors %}
+                                    <div class="alert alert-danger">
+                                        {{ field.errors }}
+                                    </div>
+                                {% endif %}
+
+                                {{ field.label }}
+                                {{ field }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Добавить</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

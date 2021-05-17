@@ -1,0 +1,303 @@
+{% extends 'base.html' %}
+{% load tags_jinja %}
+{% block title %}Профиль {{ arguments.user_data }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% if arguments.user_data and arguments.user_data.is_active %}
+            <div class="row">
+                <div class="col">
+                    <button type="button" class="btn btn-dark btn-block my_border" role="button"
+                            data-toggle="modal"
+                            data-target="#EditModal">
+                        Редактировать данные
+                    </button>
+                </div>
+                <div class="col">
+                    <button type="button" class="btn btn-danger btn-block my_border" role="button"
+                            data-toggle="modal"
+                            data-target="#DelModal">
+                        Удалить пользователя
+                    </button>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if arguments.error %}
+            <div class="alert alert-danger my_border">
+                {{ arguments.error }}
+            </div>
+        {% endif %}
+
+
+        {% if arguments.user_data %}
+            <div class="col">
+                <div class="row">
+                    <div class="col">
+                        <h2>{{ arguments.user_data.last_name }} {{ arguments.user_data.first_name }} {{ arguments.user_data.userprofile.patronymic }}</h2>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-4">
+                        <span class="font-weight-bold">Табельный номер</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="font-weight-normal">{{ arguments.user_data.id }}</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-4">
+                        <span class="font-weight-bold">Роль</span>
+                    </div>
+                    <div class="col-8">
+                                    <span class="font-weight-normal">
+                                        {% for item in arguments.user_data.groups.all %}
+                                            {{ item.name }}<br>
+                                        {% endfor %}
+                                    </span>
+                    </div>
+                </div>
+                {% if arguments.user_data.is_staff %}
+                    <div class="row">
+                        <div class="col-4">
+                            <span class="font-weight-bold">Доступ к админ панели</span>
+                        </div>
+                        <div class="col-8">
+                            <span class="font-weight-normal">{{ arguments.user_data.is_staff }}</span>
+                        </div>
+                    </div>
+                {% endif %}
+                <hr>
+                <div class="row">
+                    <div class="col-4">
+                        <span class="font-weight-bold">Логин</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="font-weight-normal">{{ arguments.user_data.username }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <span class="font-weight-bold">Дата рождения</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="font-weight-normal">{{ arguments.user_data.userprofile.birthday }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <span class="font-weight-bold">Email</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="font-weight-normal">{{ arguments.user_data.email }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <span class="font-weight-bold">Телефон</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="font-weight-normal">{{ arguments.user_data.userprofile.phone }}</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-4">
+                        <span class="font-weight-bold">Дата регистрации</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="font-weight-normal">{{ arguments.user_data.date_joined }}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <span class="font-weight-bold">Последняя авторизация</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="font-weight-normal">{{ arguments.user_data.last_login }}</span>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <h4 class="center">Сотрудник не найден!</h4>
+        {% endif %}
+    </div>
+
+    {% if arguments.user_data %}
+        <!-- Edit User Modal -->
+        <div class="modal fade" id="EditModal" tabindex="-1" role="dialog"
+             aria-labelledby="EditModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="EditModalLabel">Редактирование</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form action="/user/userlist/profile/{{ arguments.user_data.id }}/editUser">
+                        <div class="modal-body">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col">
+                                    Табельный номер: <span style="font-weight: bold">{{ arguments.user_data.id }}</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="last_name">Фамилия</label>
+                                        <input type="text" class="form-control" id="last_name"
+                                               name="last_name"
+                                               placeholder="Фамилия" value="{{ arguments.user_data.last_name }}">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="first_name">Имя</label>
+                                        <input type="text" class="form-control" id="first_name"
+                                               name="first_name"
+                                               placeholder="Имя" value="{{ arguments.user_data.first_name }}">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="patronymic">Отчество</label>
+                                        <input type="text" class="form-control" id="patronymic"
+                                               name="patronymic"
+                                               placeholder="Отчество"
+                                               value="{{ arguments.user_data.userprofile.patronymic }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="username">Логин</label>
+                                        <input type="text" class="form-control" id="username"
+                                               name="username"
+                                               placeholder="Логин" value="{{ arguments.user_data.username }}">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="patronymic">Email</label>
+                                        <input type="text" class="form-control" id="email"
+                                               name="email"
+                                               placeholder="Email" value="{{ arguments.user_data.email }}">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="user_group">Роль</label>
+                                        <select class="form-control" id="user_group" name="user_group">
+                                            {% for group in arguments.group_list %}
+                                                <option {% if arguments.user_data|has_group:group %}
+                                                    selected {% endif %}
+                                                    value="{{ group }}">
+                                                    {{ group }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="birthday">Дата рождения</label>
+                                        <input type="date" class="form-control" id="birthday"
+                                               name="birthday"
+                                               placeholder="Дата рождения"
+                                               value="{{ arguments.user_data.userprofile.birthday|data_for_input }}">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="phone">Телефон</label>
+                                        <input type="text" class="form-control" id="phone"
+                                               name="phone"
+                                               placeholder="Телефон"
+                                               value="{{ arguments.user_data.userprofile.phone }}">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-4">
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="is_staff">Доступ к админ панели</label>
+                                        <select class="form-control" id="is_staff" name="is_staff">
+                                            <option {% if arguments.user_data.is_staff %}selected{% endif %}
+                                                    value="True">
+                                                Есть
+                                            </option>
+                                            <option {% if not arguments.user_data.is_staff %}selected{% endif %}
+                                                    value="False">
+                                                Нет
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="form-group">
+                                        <label for="is_superuser">Суперпользователь</label>
+                                        <select class="form-control" id="is_superuser" name="is_superuser">
+                                            <option {% if arguments.user_data.is_superuser %}selected{% endif %}
+                                                    value="True">
+                                                Да
+                                            </option>
+                                            <option {% if not arguments.user_data.is_superuser %}selected{% endif %}
+                                                    value="False">
+                                                Нет
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button formmethod="post" type="submit" class="btn btn-primary">Сохранить</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Del User Modal -->
+        <div class="modal fade" id="DelModal" tabindex="-1" role="dialog" aria-labelledby="DelModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="DelModalLabel">Удаление пользователя</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="post" action="/user/userlist/profile/{{ arguments.user_data.id }}/delUser">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                            <p><b>Внимание!</b><br>
+                                Вы уверены что хотите произвести удаление сотрудника?
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Удалить</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

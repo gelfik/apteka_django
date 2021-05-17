@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load tags_jinja %}
+{% block title %}{{ arguments.name_tag.1 }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% if arguments.sell %}
+            {% if arguments.sell %}
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <h5>Выбранная продажа №{{ arguments.sell.id }} от: {{ arguments.sell.date_time }}</h5>
+                            <hr>
+                            <h6>
+                                Продавец: {{ arguments.sell.sell_user_id.last_name }} {{ arguments.sell.sell_user_id.first_name }} {{ arguments.sell.sell_user_id.userprofile.patronymic }}</h6>
+                            <hr>
+                            <h6>Итоговая стоимость: {{ arguments.sell.total_price }} р.</h6>
+                            <h6>Общее кол-во товаров: {{ arguments.sell.total_count }} шт.</h6>
+                            <hr>
+                            <h6>Статус исполнения продажи:
+                                {% if arguments.sell.status_sell %}
+                                    Исполнена
+                                {% else %}
+                                    В процессе исполнения
+                                {% endif %}
+                            </h6>
+                            <hr>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Товар</th>
+                        <th scope="col">Цена</th>
+                        <th scope="col">Колличество</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if arguments.data_search|cheak_count_list > 0 %}
+                        {% for data in arguments.data_search %}
+                            <tr role="button">
+                                <th scope="row" data-toggle="tooltip"
+                                    data-placement="bottom">{{ data.preporat_id }}</th>
+                                <td data-toggle="tooltip" data-placement="bottom">{{ data.price }} р.</td>
+                                <td data-toggle="tooltip" data-placement="bottom">{{ data.count }} шт.</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr role="button">
+                            <th scope="row" data-toggle="tooltip" data-placement="bottom"
+                                colspan="5" class="center">
+                                {{ arguments.name_tag.1 }} еще не добавлены!
+                            </th>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-danger my_border">
+                Продажа не найдена!
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

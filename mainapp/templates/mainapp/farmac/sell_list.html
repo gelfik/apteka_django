@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load tags_jinja %}
+{% block title %}{{ arguments.name_tag.1 }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-dark btn-block my_border">
+                Добавить {{ arguments.name_tag.0 }}
+            </button>
+        </form>
+
+        {% if arguments.error %}
+            <div class="alert alert-danger my_border">
+                {{ arguments.error }}
+            </div>
+        {% endif %}
+
+        <div class="table-responsive">
+            <table class="table table-sm table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Дата и время</th>
+                    <th scope="col">Стоимость</th>
+                    <th scope="col">Кол-во товара</th>
+                    <th scope="col">Статус</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if arguments.data_search|cheak_count_list > 0 %}
+                    {% for data in arguments.data_search %}
+                        <tr role="button"
+                            onclick="window.location.href = '/app/sell/{{ data.id }}/elements/'">
+                            <th scope="row" data-toggle="tooltip" data-placement="bottom"
+                                title="Нажмите для управления">{{ data.date_time }}</th>
+                            <td data-toggle="tooltip" data-placement="bottom"
+                                title="Нажмите для управления">{{ data.total_price }} р.</td>
+                            <td data-toggle="tooltip" data-placement="bottom"
+                                title="Нажмите для управления">{{ data.total_count }} шт.</td>
+                            <td data-toggle="tooltip" data-placement="bottom"
+                                title="Нажмите для управления">{% if not data.status_sell %}
+                                В исполнении
+                            {% else %}
+                                Исполнена
+                            {% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr role="button">
+                        <th scope="row" data-toggle="tooltip" data-placement="bottom"
+                            colspan="5" class="center">
+                            {{ arguments.name_tag.1 }} еще не добавлены!
+                        </th>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Add Modal -->
+    <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="AddModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AddModalLabel">Добавление нового {{ arguments.name_tag.3 }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        {% for field in arguments.form %}
+                            <div class="form-group">
+                                {% if field.errors %}
+                                    <div class="alert alert-danger">
+                                        {{ field.errors }}
+                                    </div>
+                                {% endif %}
+                                {{ field.label }}
+                                {{ field }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Добавить</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

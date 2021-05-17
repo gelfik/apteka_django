@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load tags_jinja %}
+{% block title %}Профиль {{ user }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        <div class="col">
+            <div class="row">
+                <div class="col">
+                    <h2>{{ user.last_name }} {{ user.first_name }} {{ user.userprofile.patronymic }}</h2>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-4">
+                    <span class="font-weight-bold">Табельный номер</span>
+                </div>
+                <div class="col-8">
+                    <span class="font-weight-normal">{{ user.id }}</span>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-4">
+                    <span class="font-weight-bold">Роль</span>
+                </div>
+                <div class="col-8">
+                                    <span class="font-weight-normal">
+                                        {% for item in user.groups.all %}
+                                            {{ item.name }}<br>
+                                        {% endfor %}
+                                    </span>
+                </div>
+            </div>
+            {% if user.is_staff %}
+                <div class="row">
+                    <div class="col-4">
+                        <span class="font-weight-bold">Доступ к админ панели</span>
+                    </div>
+                    <div class="col-8">
+                        <span class="font-weight-normal">{{ user.is_staff }}</span>
+                    </div>
+                </div>
+            {% endif %}
+            <hr>
+            <div class="row">
+                <div class="col-4">
+                    <span class="font-weight-bold">Логин</span>
+                </div>
+                <div class="col-8">
+                    <span class="font-weight-normal">{{ user.username }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <span class="font-weight-bold">Дата рождения</span>
+                </div>
+                <div class="col-8">
+                    <span class="font-weight-normal">{{ user.userprofile.birthday }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <span class="font-weight-bold">Email</span>
+                </div>
+                <div class="col-8">
+                    <span class="font-weight-normal">{{ user.email }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <span class="font-weight-bold">Телефон</span>
+                </div>
+                <div class="col-8">
+                    <span class="font-weight-normal">{{ user.userprofile.phone }}</span>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-4">
+                    <span class="font-weight-bold">Дата регистрации</span>
+                </div>
+                <div class="col-8">
+                    <span class="font-weight-normal">{{ user.date_joined }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <span class="font-weight-bold">Последняя авторизация</span>
+                </div>
+                <div class="col-8">
+                    <span class="font-weight-normal">{{ user.last_login }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

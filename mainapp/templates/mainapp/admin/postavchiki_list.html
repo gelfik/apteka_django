@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load tags_jinja %}
+{% block title %}Поставщики{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% if user|has_group:"Администратор" %}
+            <button type="button" class="btn btn-dark btn-block my_border" role="button" data-toggle="modal"
+                    data-target="#AddModal">
+                Добавить поставщика
+            </button>
+
+            {% if arguments.error %}
+                <div class="alert alert-danger my_border">
+                    {{ arguments.error }}
+                </div>
+            {% endif %}
+        {% endif %}
+
+        {% if arguments.postavchiki|cheak_count_list > 0 %}
+            <table class="table table-sm table-hover">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Наименование</th>
+                    <th scope="col">Адресс</th>
+                    <th scope="col">Телефон</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if arguments.postavchiki|cheak_count_list > 0 %}
+                    {% for postavchik in arguments.postavchiki %}
+                        <tr role="button" data-toggle="modal" data-target="#EditModal_{{ postavchik.id }}">
+                            <th scope="row" data-toggle="tooltip" data-placement="bottom"
+                                title="Нажмите для редактирования">{{ postavchik.name }}</th>
+                            <td data-toggle="tooltip" data-placement="bottom"
+                                title="Нажмите для редактирования">{{ postavchik.address }}</td>
+                            <td data-toggle="tooltip" data-placement="bottom"
+                                title="Нажмите для редактирования">{{ postavchik.phone }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr role="button">
+                        <th scope="row" data-toggle="tooltip" data-placement="bottom"
+                            colspan="5" class="center">
+                            Поставщики еще не добавлены!
+                        </th>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="alert alert-danger my_border">
+                Нет поставщиков в базе!
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Add Modal -->
+    <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="AddModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AddModalLabel">Добавление нового поставщика</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        {% for field in arguments.form %}
+                            <div class="form-group">
+                                {% if field.errors %}
+                                    <div class="alert alert-danger">
+                                        {{ field.errors }}
+                                    </div>
+                                {% endif %}
+                                {{ field.label }}
+                                {{ field }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Добавить</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {% if arguments.postavchiki_edit %}
+        {% for data in arguments.postavchiki_edit %}
+            <!-- Edit Modal {{ data.id }} -->
+            <div class="modal fade" id="EditModal_{{ data.id }}" tabindex="-1" role="dialog"
+                 aria-labelledby="EditModalLabel_{{ data.id }}"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="EditModalLabel_{{ data.id }}">Редактирвоание
+                                поставщика</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form action="{{ request.path }}{{ data.id }}/">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                {% for field in data.form %}
+                                    <div class="form-group">
+                                        {% if field.errors %}
+                                            <div class="alert alert-danger">
+                                                {{ field.errors }}
+                                            </div>
+                                        {% endif %}
+                                        {{ field.label }}
+                                        {{ field }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="modal-footer">
+                                <button formmethod="get" type="submit" class="btn btn-danger">Удалить</button>
+                                <button formmethod="post" type="submit" class="btn btn-primary">Сохранить изменения
+                                </button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

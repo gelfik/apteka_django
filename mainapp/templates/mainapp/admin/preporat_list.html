@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load tags_jinja %}
+{% block title %}{{ arguments.name_tag.1 }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        {% if user|has_group:"Администратор" %}
+            <button type="button" class="btn btn-dark btn-block my_border" role="button" data-toggle="modal"
+                    data-target="#AddModal">
+                Добавить {{ arguments.name_tag.0 }}
+            </button>
+
+            {% if arguments.error %}
+                <div class="alert alert-danger my_border">
+                    {{ arguments.error }}
+                </div>
+            {% endif %}
+        {% endif %}
+
+        {% if arguments.data_search|cheak_count_list > 0 %}
+            <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                    <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Название</th>
+                        <th scope="col">Производитель</th>
+                        <th scope="col">Подкатегория</th>
+                        <th scope="col">Брэнд</th>
+                        <th scope="col">Цена</th>
+                        <th scope="col">Кол-во в наличии</th>
+                        <th scope="col">Требование рецепта</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% if arguments.data_search|cheak_count_list > 0 %}
+                        {% for data in arguments.data_search %}
+                            <tr role="button" data-toggle="modal" data-target="#EditModal_{{ data.id }}">
+                                <th scope="row" data-toggle="tooltip" data-placement="bottom"
+                                    title="Нажмите для редактирования">{{ data.name }}</th>
+                                <td data-toggle="tooltip" data-placement="bottom"
+                                    title="Нажмите для редактирования">{{ data.proizvoditel_id }}</td>
+                                <td data-toggle="tooltip" data-placement="bottom"
+                                    title="Нажмите для редактирования">{{ data.pod_category_preporat_id }}</td>
+                                <td data-toggle="tooltip" data-placement="bottom"
+                                    title="Нажмите для редактирования">{{ data.brend_id }}</td>
+                                <td data-toggle="tooltip" data-placement="bottom"
+                                    title="Нажмите для редактирования">{{ data.price }}</td>
+                                <td data-toggle="tooltip" data-placement="bottom"
+                                    title="Нажмите для редактирования">{{ data.count }}</td>
+                                {% if data.recept %}
+                                    <td data-toggle="tooltip" data-placement="bottom"
+                                        title="Нажмите для редактирования">Требуется
+                                    </td>
+                                {% else %}
+                                    <td data-toggle="tooltip" data-placement="bottom"
+                                        title="Нажмите для редактирования">Не требуется
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr role="button">
+                            <th scope="row" data-toggle="tooltip" data-placement="bottom"
+                                colspan="10" class="center">
+                                {{ arguments.name_tag.1 }} еще не добавлены!
+                            </th>
+                        </tr>
+                    {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-danger my_border">
+                Нет {{ arguments.name_tag.2 }} в базе!
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Add Modal -->
+    <div class="modal fade" id="AddModal" tabindex="-1" role="dialog" aria-labelledby="AddModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AddModalLabel">Добавление нового {{ arguments.name_tag.3 }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        {% for field in arguments.form %}
+                            <div class="form-group">
+                                {% if field.errors %}
+                                    <div class="alert alert-danger">
+                                        {{ field.errors }}
+                                    </div>
+                                {% endif %}
+                                {{ field.label }}
+                                {{ field }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Добавить</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    {% if arguments.data_edit %}
+        {% for data in arguments.data_edit %}
+            <!-- Edit Modal {{ data.id }} -->
+            <div class="modal fade" id="EditModal_{{ data.id }}" tabindex="-1" role="dialog"
+                 aria-labelledby="EditModalLabel_{{ data.id }}"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="EditModalLabel_{{ data.id }}">Редактирвоание
+                                {{ arguments.name_tag.3 }}</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form action="{{ request.path }}{{ data.id }}/">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                {% for field in data.form %}
+                                    <div class="form-group">
+                                        {% if field.errors %}
+                                            <div class="alert alert-danger">
+                                                {{ field.errors }}
+                                            </div>
+                                        {% endif %}
+                                        {{ field.label }}
+                                        {{ field }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="modal-footer">
+                                <button formmethod="get" type="submit" class="btn btn-danger">Удалить</button>
+                                <button formmethod="post" type="submit" class="btn btn-primary">Сохранить изменения
+                                </button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

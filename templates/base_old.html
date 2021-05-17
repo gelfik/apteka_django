@@ -1,0 +1,136 @@
+<!doctype html>
+{% load static %}
+{% load tags_jinja %}
+<html lang="ru">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset="utf-8">
+    <meta name="theme-color" content="#e8eaec">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" type="image/png" href="{% static "favicon.ico" %}">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css"
+          integrity="sha512-/zs32ZEJh+/EO2N1b0PEdoA10JkdC3zJ8L5FTiQu82LR9S/rOQNfQN7U59U9BC12swNeRAz3HSzIL2vpp4fv3w=="
+          crossorigin="anonymous"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
+            integrity="sha512-s+xg36jbIujB2S2VKfpGmlC3T5V2TF3lY48DX7u2r9XzGzgPsa6wTpOQA7J9iffvdeBN0q9tKzRxVxw1JviZPg=="
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    {% if not user.is_authenticated %}
+        <style>
+            html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+            }
+
+            .parent {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                overflow: auto;
+            }
+
+            .block {
+                height: 250px;
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                margin: auto;
+            }
+        </style>
+    {% endif %}
+
+</head>
+<body style="background-color:#e8eaec">
+<div class="bg-dark header d-print-none" style="z-index: 10000" id="navbar">
+    <nav class="container navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">Аптека</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" style="justify-content: flex-end;">
+            <ul class="nav bg-dark">
+                {% if user.is_authenticated %}
+                    {% if user|has_group:"Администратор" or user|has_group:"Фармацевт" %}
+                        {% if user|has_group:"Администратор" %}
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="/user/userlist">Сотрудники</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="/app/preporat/">Препораты</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="/tests">Заказы</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="/tests">Продажи</a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" style="color:white" data-toggle="dropdown" role="button"
+                           aria-haspopup="true"
+                           aria-expanded="false">{{ user.last_name }} {{ user.first_name }}</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/user/profile">Профиль</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/app/auth/logout/">Выйти</a>
+                        </div>
+                    </li>
+                {% endif %}
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
+{% block content %}{% endblock %}
+
+{{ STATIC_URL }}
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+{#<script src="{% static 'js/js.js' %}"></script>#}
+{#{% if user.is_authenticated %}#}
+{#    <script>#}
+{#        function get_data(user_id) {#}
+{#            let r = {#}
+{#                url: '/user/auth/user/',#}
+{#                type: 'GET',#}
+{#                data: {user_id: user_id},#}
+{#                dataType: 'json',#}
+{#                success: function (request) {#}
+{#                    if (request['role'] == 'Эксперт') {#}
+{#                        $('.count_expert_tests').append('<span class="badge badge-light">' + request['count_expert_tests'] + '</span>')#}
+{#                    }#}
+{#                },#}
+{#                error: function (request) {#}
+{#                    console.log(request);#}
+{#                }#}
+{#            };#}
+{#            $.ajax(r);#}
+{#        }#}
+{##}
+{#        get_data({{ user.id }});#}
+{#    </script>#}
+{#{% endif %}#}
+</body>
+</html>
