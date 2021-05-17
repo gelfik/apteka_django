@@ -4,7 +4,6 @@ from .forms import *
 from django.template.context_processors import csrf
 from django.contrib.auth.models import User, Group
 from django.contrib import auth
-from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import Sum
 
 

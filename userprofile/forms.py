@@ -120,6 +120,7 @@ class SignUpForm(UserCreationForm):
         return password2
 
     def save(self, commit=True, password="unknown", username="unknown"):
+        self.cleaned_data["password1"] = password
         user = super(SignUpForm, self).save(commit=False)
         user.set_password(password)
         user.username = username
