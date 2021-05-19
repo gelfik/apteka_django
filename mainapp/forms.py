@@ -1,6 +1,5 @@
 from django.forms import ModelForm
 from django.utils import timezone
-
 from .models import *
 from django import forms
 from django.utils.translation import gettext, gettext_lazy as _
