@@ -137,7 +137,7 @@ class postavki_element_Form(ModelForm):
                                          queryset=None)
     postavka_price = forms.FloatField(label=_("Закупочная стоимость"),
                                       widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    count = forms.IntegerField(label=_("Колличество"), widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    count = forms.IntegerField(label=_("Количество"), widget=forms.NumberInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = postavki_element_list
@@ -164,7 +164,7 @@ class sell_Form(ModelForm):
                                           queryset=None)
     total_price = forms.FloatField(label=_("Итоговая стоимость"),
                                    widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    total_count = forms.IntegerField(label=_("Итоговое колличество"),
+    total_count = forms.IntegerField(label=_("Итоговое количество"),
                                      widget=forms.NumberInput(attrs={'class': 'form-control'}))
 
     class Meta:
@@ -187,7 +187,7 @@ class sell_element_Form(ModelForm):
                                      queryset=None)
     price = forms.FloatField(label=_("Цена"),
                              widget=forms.NumberInput(attrs={'class': 'form-control'}))
-    count = forms.IntegerField(label=_("Колличество"), widget=forms.NumberInput(attrs={'class': 'form-control'}))
+    count = forms.IntegerField(label=_("Количество"), widget=forms.NumberInput(attrs={'class': 'form-control'}))
 
     class Meta:
         model = sell_element_list

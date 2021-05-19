@@ -139,7 +139,7 @@ class postavki_element_list(models.Model):
     postavki_id = models.ForeignKey(postavki_list, on_delete=models.CASCADE, verbose_name='Поставка',
                                     default=None)
     postavka_price = models.FloatField('Закупочная стоимость', default=0)
-    count = models.IntegerField('Колличество', default=0)
+    count = models.IntegerField('Количество', default=0)
     del_status = models.BooleanField('Статус удаления', default=True)
 
     class Meta:
@@ -157,7 +157,7 @@ class sell_list(models.Model):
     sell_user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Продавец',
                                      default=None)
     total_price = models.FloatField('Итоговая стоимость', default=0)
-    total_count = models.IntegerField('Итоговое колличество', default=0)
+    total_count = models.IntegerField('Итоговое количество', default=0)
     status_sell = models.BooleanField('Статус исполнения продажи', default=False)
     del_status = models.BooleanField('Статус удаления', default=True)
 
@@ -176,7 +176,7 @@ class sell_element_list(models.Model):
     sell_id = models.ForeignKey(sell_list, on_delete=models.CASCADE, verbose_name='Продажа',
                                 default=None)
     price = models.FloatField('Итоговая стоимость', default=0)
-    count = models.IntegerField('Колличество', default=0)
+    count = models.IntegerField('Количество', default=0)
     del_status = models.BooleanField('Статус удаления', default=True)
 
     class Meta:
