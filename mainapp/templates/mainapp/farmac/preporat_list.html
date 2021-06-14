@@ -6,7 +6,7 @@
     <div class="container">
         <form class="form-inline" method="post">
             {% csrf_token %}
-            <input class="form-control col-9" type="search" placeholder="Название препората" aria-label="Search" name="query" {% if arguments.query_data %} value="{{ arguments.query_data }}" {% endif %}>
+            <input class="form-control col-9" type="search" placeholder="Название препарата" aria-label="Search" name="query" {% if arguments.query_data %} value="{{ arguments.query_data }}" {% endif %}>
 {#            <button class="btn btn-outline-success col-3" type="submit">Поиск</button>#}
             <button type="submit" class="btn btn-dark col-3">Поиск</button>
         </form>

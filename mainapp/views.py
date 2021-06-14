@@ -422,7 +422,7 @@ def proizvoditel_updater(request, id):
 
 def preporat(request):
     arguments = {}
-    arguments.update(name_tag=['препорат', 'Препораты', 'препоратов', 'препората'])
+    arguments.update(name_tag=['препарат', 'Препараты', 'препаратов', 'препарата'])
     if request.user.is_authenticated:
         if has_group(request.user, 'Администратор'):
             try:
@@ -731,7 +731,7 @@ def sell_accept(request, sell_id, query_type):
                         preporat_object.save()
                     data_object.save()
                 else:
-                    usr.set_error('Вы не можете провести продажу, если в ней нет препоратов!')
+                    usr.set_error('Вы не можете провести продажу, если в ней нет препаратов!')
             except:
                 pass
             return_url = request.META.get('HTTP_REFERER').split(f'{request.META.get("HTTP_HOST")}')[1]
@@ -784,7 +784,7 @@ def sell_elem(request, sell_id, **kwargs):
                         return redirect(f'{return_url}')
                     else:
                         arguments.update(
-                            error=f"Не хватает выбранного препората на складе, доступно {preporat_object.count - sell_list_object.total_count}!")
+                            error=f"Не хватает выбранного препарата на складе, доступно {preporat_object.count - sell_list_object.total_count}!")
                         arguments.update(form=newdata_form)
                         return render(request, 'mainapp/farmac/sell_elem_list.html', {'arguments': arguments})
                 else:
@@ -823,7 +823,7 @@ def sell_elem_updater(request, sell_id, id):
                         data_object.count = newp_form.cleaned_data.get('count')
                     else:
                         arguments.update(
-                            error=f"Не хватает выбранного препората на складе, доступно {preporat_object.count - sell_list_object.total_count}!")
+                            error=f"Не хватает выбранного препарата на складе, доступно {preporat_object.count - sell_list_object.total_count}!")
                         usr.set_error(arguments['error'])
                 else:
                     arguments.update(error="Форма добавления заполнена не корректно!")

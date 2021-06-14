@@ -54,8 +54,8 @@ class category_preporat_list(models.Model):
     del_status = models.BooleanField('Статус удаления', default=True)
 
     class Meta:
-        verbose_name = 'Категория препората'
-        verbose_name_plural = 'Категории препоратов'
+        verbose_name = 'Категория препарата'
+        verbose_name_plural = 'Категории препаратов'
         db_table = 'category_preporat'
 
     def __str__(self):
@@ -69,8 +69,8 @@ class pod_category_preporat_list(models.Model):
     del_status = models.BooleanField('Статус удаления', default=True)
 
     class Meta:
-        verbose_name = 'Подкатегория препората'
-        verbose_name_plural = 'Подкатегории препоратов'
+        verbose_name = 'Подкатегория препарата'
+        verbose_name_plural = 'Подкатегории препаратов'
         db_table = 'pod_category_preporat'
 
     def __str__(self):
@@ -78,7 +78,7 @@ class pod_category_preporat_list(models.Model):
 
 
 class preporat_list(models.Model):
-    name = models.CharField('Название препората', max_length=256, default=None)
+    name = models.CharField('Название препарата', max_length=256, default=None)
     proizvoditel_id = models.ForeignKey(proizvoditel_list, on_delete=models.CASCADE, verbose_name='Производитель',
                                         default=None)
     pod_category_preporat_id = models.ForeignKey(pod_category_preporat_list, on_delete=models.CASCADE,
@@ -87,13 +87,13 @@ class preporat_list(models.Model):
     brend_id = models.ForeignKey(brend_list, on_delete=models.CASCADE, verbose_name='Брэнд',
                                  default=None)
     price = models.FloatField('Цена', default=0)
-    count = models.IntegerField('Кол-во препората в наличии', default=0)
+    count = models.IntegerField('Кол-во препарата в наличии', default=0)
     recept = models.BooleanField('Требование рецепта', default=False)
     del_status = models.BooleanField('Статус удаления', default=True)
 
     class Meta:
-        verbose_name = 'Препорат'
-        verbose_name_plural = 'Препораты'
+        verbose_name = 'Препарат'
+        verbose_name_plural = 'Препараты'
         db_table = 'preporats'
 
     def __str__(self):
@@ -134,7 +134,7 @@ class postavki_list(models.Model):
 
 
 class postavki_element_list(models.Model):
-    preporat_id = models.ForeignKey(preporat_list, on_delete=models.CASCADE, verbose_name='Препорат',
+    preporat_id = models.ForeignKey(preporat_list, on_delete=models.CASCADE, verbose_name='Препарат',
                                     default=None)
     postavki_id = models.ForeignKey(postavki_list, on_delete=models.CASCADE, verbose_name='Поставка',
                                     default=None)
@@ -171,7 +171,7 @@ class sell_list(models.Model):
 
 
 class sell_element_list(models.Model):
-    preporat_id = models.ForeignKey(preporat_list, on_delete=models.CASCADE, verbose_name='Препорат',
+    preporat_id = models.ForeignKey(preporat_list, on_delete=models.CASCADE, verbose_name='Препарат',
                                     default=None)
     sell_id = models.ForeignKey(sell_list, on_delete=models.CASCADE, verbose_name='Продажа',
                                 default=None)

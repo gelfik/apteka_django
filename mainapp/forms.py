@@ -66,7 +66,7 @@ class pod_category_preporat_Form(ModelForm):
 
 
 class preporat_Form(ModelForm):
-    name = forms.CharField(label=_("Название препората"), widget=forms.TextInput(attrs={'class': 'form-control'}))
+    name = forms.CharField(label=_("Название препарата"), widget=forms.TextInput(attrs={'class': 'form-control'}))
     proizvoditel_id = forms.ModelChoiceField(label=_("Производитель"),
                                              widget=forms.Select(attrs={'class': 'form-control'}), queryset=None)
     pod_category_preporat_id = forms.ModelChoiceField(label=_("Подкатегория"),
@@ -131,7 +131,7 @@ class postavki_Form(ModelForm):
 
 
 class postavki_element_Form(ModelForm):
-    preporat_id = forms.ModelChoiceField(label=_("Препорат"), widget=forms.Select(attrs={'class': 'form-control'}),
+    preporat_id = forms.ModelChoiceField(label=_("Препарат"), widget=forms.Select(attrs={'class': 'form-control'}),
                                          queryset=None)
     postavki_id = forms.ModelChoiceField(label=_("Поставка"), widget=forms.Select(attrs={'class': 'form-control'}),
                                          queryset=None)
@@ -181,7 +181,7 @@ class sell_Form(ModelForm):
 
 
 class sell_element_Form(ModelForm):
-    preporat_id = forms.ModelChoiceField(label=_("Препорат"), widget=forms.Select(attrs={'class': 'form-control'}),
+    preporat_id = forms.ModelChoiceField(label=_("Препарат"), widget=forms.Select(attrs={'class': 'form-control'}),
                                          queryset=None)
     sell_id = forms.ModelChoiceField(label=_("Продажа"), widget=forms.Select(attrs={'class': 'form-control'}),
                                      queryset=None)
