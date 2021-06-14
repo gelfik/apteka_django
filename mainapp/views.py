@@ -131,9 +131,11 @@ def app(request):
     if request.user.is_authenticated:
         if request.method == "GET":
             if has_group(request.user, 'Фармацевт'):
-                return render(request, 'mainapp/admin/index.html', {'arguments': arguments})
+                return redirect('/app/sell/')
+                # return render(request, 'mainapp/admin/index.html', {'arguments': arguments})
             elif has_group(request.user, 'Администратор'):
-                return render(request, 'mainapp/farmac/index.html', {'arguments': arguments})
+                return redirect('/app/sell/')
+                # return render(request, 'mainapp/farmac/index.html', {'arguments': arguments})
             else:
                 auth.logout(request)
                 return redirect('/')
