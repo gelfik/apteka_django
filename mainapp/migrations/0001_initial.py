@@ -107,7 +107,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('date_time', models.DateTimeField(default=None, verbose_name='Дата и время продажи')),
                 ('total_price', models.FloatField(default=0, verbose_name='Итоговая стоимость')),
-                ('total_count', models.IntegerField(default=0, verbose_name='Итоговое колличество')),
+                ('total_count', models.IntegerField(default=0, verbose_name='Итоговое количество')),
                 ('del_status', models.BooleanField(default=True, verbose_name='Статус удаления')),
                 ('sell_user_id', models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Продавец')),
             ],
@@ -122,7 +122,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('date_time', models.DateTimeField(default=None, verbose_name='Дата и время продажи')),
-                ('count', models.IntegerField(default=0, verbose_name='Колличество')),
+                ('count', models.IntegerField(default=0, verbose_name='Количество')),
                 ('del_status', models.BooleanField(default=True, verbose_name='Статус удаления')),
                 ('preporat_id', models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='mainapp.preporat_list', verbose_name='Препорат')),
                 ('sell_id', models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='Продавец')),
@@ -175,7 +175,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('postavka_price', models.FloatField(default=0, verbose_name='Закупочная стоимость')),
-                ('count', models.IntegerField(default=0, verbose_name='Колличество')),
+                ('count', models.IntegerField(default=0, verbose_name='Количество')),
                 ('del_status', models.BooleanField(default=True, verbose_name='Статус удаления')),
                 ('postavki_id', models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='mainapp.postavki_list', verbose_name='Поставка')),
                 ('preporat_id', models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='mainapp.preporat_list', verbose_name='Препорат')),
