@@ -1,10 +1,79 @@
+# -*- coding: utf-8 -*-
+import os
+
+import xhtml2pdf
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
+from django.views import View
+
+from apteka_django import settings
 from .forms import *
 from django.template.context_processors import csrf
 from django.contrib.auth.models import User, Group
 from django.contrib import auth
 from django.db.models import Sum
+
+# from django_xhtml2pdf.utils import pdf_decorator
+
+from io import BytesIO, StringIO
+from django.http import HttpResponse
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
+
+def fetch_pdf_resources(uri, rel):
+    if uri.find(settings.MEDIA_URL) != -1:
+        path = os.path.join(settings.MEDIA_ROOT, uri.replace(settings.MEDIA_URL, ''))
+    elif uri.find(settings.STATIC_URL) != -1:
+        path = os.path.join(settings.STATIC_ROOT, uri.replace(settings.STATIC_URL, ''))
+    else:
+        path = None
+    print(path)
+    return path
+
+
+def render_pdf(url_template, context):
+    template = get_template(url_template)
+    html = template.render(context)
+
+    result = BytesIO()
+    # result = StringIO()
+    pdf = pisa.CreatePDF(BytesIO(html.encode('utf-8')), result,
+                         encode='utf-8',
+                         link_callback=fetch_pdf_resources)
+
+    print(result)
+    # print(b'\x93'.decode('utf-8'))
+    print(result.getvalue())
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type="application/pdf")
+    return None
+
+# @pdf_decorator
+def pdf_get(request):
+    arguments = {}
+    arguments.update(csrf(request))
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            try:
+                arguments.update(data_search=preporat_list.objects.all().filter(del_status=1))
+            except:
+                pass
+            if has_group(request.user, 'Фармацевт'):
+                return render(request, 'mainapp/admin/pdf_preports.html', {'arguments': arguments})
+            elif has_group(request.user, 'Администратор'):
+                # return render(request, 'mainapp/admin/preporat_list.html', {'arguments': arguments})
+                # return HttpResponse(render(request, 'mainapp/admin/pdf_preports.html', {'arguments': arguments}), content_type="application/pdf")
+                pdf = render_pdf("mainapp/admin/pdf_preports.html", context={'arguments': arguments, 'request': request, 'user': request.user})
+                return HttpResponse(pdf, content_type="application/pdf")
+            else:
+                auth.logout(request)
+                return redirect('/')
+        else:
+            response = render(request, 'mainapp/index.html')
+            return response
+    else:
+        return HttpResponse('405 Method Not Allowed', status=405)
 
 
 class User_data:
@@ -29,7 +98,9 @@ class User_data:
     def get_error_status(self):
         return self.error_status
 
+
 usr = User_data()
+
 
 def has_group(user, group_name):
     from django.contrib.auth.models import Group
@@ -682,7 +753,8 @@ def sell(request):
                 return render(request, 'mainapp/farmac/sell_list.html', {'arguments': arguments})
             elif request.method == "POST":
                 try:
-                    last_tranzak = sell_list.objects.filter(sell_user_id=request.user, del_status=1).order_by('-date_time')[:1][0]
+                    last_tranzak = \
+                        sell_list.objects.filter(sell_user_id=request.user, del_status=1).order_by('-date_time')[:1][0]
                     last_tranzak_status = last_tranzak.status_sell
                 except:
                     last_tranzak_status = True
@@ -820,7 +892,7 @@ def sell_elem_updater(request, sell_id, id):
                     preporat_count = newp_form.cleaned_data.get('count')
                     preporat_object = preporat_list.objects.get(id=preporat_id.id)
                     sell_list_object = sell_list.objects.get(id=sell_id, del_status=1)
-                    if (preporat_object.count - sell_list_object.total_count+data_object.count) >= preporat_count:
+                    if (preporat_object.count - sell_list_object.total_count + data_object.count) >= preporat_count:
                         data_object.preporat_id = newp_form.cleaned_data.get('preporat_id')
                         data_object.count = newp_form.cleaned_data.get('count')
                     else:

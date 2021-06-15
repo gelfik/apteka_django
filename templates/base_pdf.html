@@ -1,0 +1,32 @@
+<!doctype html>
+{% load static %}
+{% load tags_jinja %}
+<html lang="ru">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta charset="utf-8">
+    <meta name="theme-color" content="#e8eaec">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" type="image/png" href="{% static "favicon.ico" %}">
+    <link rel="stylesheet" href="{% static "\css\bootstrap.min.pdf.css" %}">
+    <style>
+        @font-face {
+            font-family: "Segoe UI";
+            src: url({% static "\SegoeUI.ttf" %}) format("truetype");
+        }
+
+        body {
+            font-size: 12px;
+        }
+    </style>
+
+</head>
+<body>
+
+{% block content %}{% endblock %}
+
+{{ STATIC_URL }}
+</body>
+</html>

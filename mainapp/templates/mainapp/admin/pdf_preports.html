@@ -1,0 +1,42 @@
+{% extends 'base_pdf.html' %}
+{% load tags_jinja %}
+{% block title %}{{ arguments.name_tag.1 }}{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <h3>Отчет сгенерирован: {% now "j F Y H:i" %}</h3>
+
+        {% if arguments.data_search|cheak_count_list > 0 %}
+            <table class="table">
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Наименование</th>
+                    <th scope="col">Производитель</th>
+                    <th scope="col">Подкатегория</th>
+                    <th scope="col">Цена</th>
+                    <th scope="col">Кол-во в наличии</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if arguments.data_search|cheak_count_list > 0 %}
+                    {% for data in arguments.data_search %}
+                        <tr>
+                            <th scope="row">{{ data.name }}</th>
+                            <td>{{ data.proizvoditel_id }}</td>
+                            <td>{{ data.pod_category_preporat_id }}</td>
+                            <td>{{ data.price }}</td>
+                            <td>{{ data.count }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <th scope="row" colspan="10" class="center">
+                            {{ arguments.name_tag.1 }} еще не добавлены!
+                        </th>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

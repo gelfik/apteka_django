@@ -14,6 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path, re_path, include
+
 from . import views
 
 urlpatterns = [
@@ -47,4 +48,9 @@ urlpatterns = [
     re_path(r'sell/([0-9]+)/(accept)', views.sell_accept),
     re_path(r'sell/([0-9]+)/', views.sell_updater),
     path('sell/', views.sell),
+
+    path('pdf/', views.pdf_get),
+    # re_path(r'^pdf/$', MyPDFView.as_view(), name='book-detail'),
+    # re_path(r'^pdf/$', PDFTemplateView.as_view(template_name='/mainapp/admin/preporat_list.html',
+    #                                         filename='my_pdf.pdf'), name='pdf'),
 ]
